@@ -1,12 +1,18 @@
 import http from 'http'
 import { Server } from 'socket.io'
+import express from 'express'
+import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
 
-const httpServer = http.createServer()
+const app = express()
+const httpServer = http.createServer(app)
 const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:3000'
+    origin: '*'
   }
 })
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 // Login
 io.use((socket, next) => {
@@ -18,6 +24,8 @@ io.use((socket, next) => {
   socket.username = username
   next()
 })
+
+app.use(express.urlencoded({ extended: false }))
 
 io.on('connection', (socket) => {
   console.log('New user:', socket.id, socket.username)
@@ -56,7 +64,9 @@ io.on('connection', (socket) => {
   })
 })
 
-const PORT = process.env.PORT || 3002
+app.use(express.static(join(__dirname, '../build')))
+
+const PORT = process.env.PORT || 3000
 
 httpServer.listen(PORT, () => {
   console.log(`Server listening on port: ${PORT}`)
