@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import socket from '../utils/socket'
-import { RiCheckboxBlankCircleFill, RiErrorWarningLine } from 'react-icons/ri'
+import { RiCheckboxBlankCircleFill } from 'react-icons/ri'
+import Sidebar from './Sidebar'
 
 export default function Chat() {
   const [users, setUsers] = useState([])
@@ -21,6 +22,7 @@ export default function Chat() {
   useEffect(() => {
     socket.on('users', (allUsers) => {
       setUsers(allUsers)
+      setSelectedUser(allUsers[0])
     })
 
     socket.on('user connected', (user) => {
@@ -86,79 +88,29 @@ export default function Chat() {
     setActualMessage('')
   }
 
-  const renderMessage = (message) => {
+  const renderMessage = (message, index) => {
     if (message.fromSelf) {
       return (
-        <div className="self-end" key={selectedUser.messages.length}>
-          <p className="font-bold">Me:</p>
+        <div className="self-end rounded bg-[#2b5278] p-2" key={index}>
+          <p className="font-bold text-sm">Me</p>
           <p>{message.content}</p>
         </div>
       )
     } else {
       return (
-        <div className="self-start" key={selectedUser.messages.length}>
-          <p className="font-bold">{selectedUser.username}:</p>
+        <div className="self-start rounded bg-[#182533] p-2" key={index}>
+          <p className="font-bold text-sm">{selectedUser.username}</p>
           <p>{message.content}</p>
         </div>
       )
     }
   }
 
-  const renderUser = (user) => {
-    if (selectedUser.userID === 0) {
-      setSelectedUser(user)
-    }
-
-    return (
-      <div
-        className={`py-2 border-b border-slate-700 cursor-pointer relative ${
-          selectedUser.userID === user.userID ? 'bg-[#1b1e23]' : ''
-        }`}
-        onClick={() => {
-          const newUsers = [...users]
-          for (let i = 0; i < newUsers.length; i++) {
-            const userToChange = newUsers[i]
-            if (userToChange.userID === user.userID) {
-              userToChange.hasNewMessages = false
-            }
-          }
-          setUsers(newUsers)
-          setSelectedUser(user)
-        }}
-        key={user.userID}
-      >
-        <div className="flex flex-col pl-4">
-          <p className="text-white text-md">{user.username}</p>
-          <p className="text-sm text-slate-500">
-            {user.connected ? (
-              <span className="flex items-center gap-1">
-                <RiCheckboxBlankCircleFill color="green" size={'10px'} />
-                Online
-              </span>
-            ) : (
-              <span className="flex items-center gap-1">
-                <RiCheckboxBlankCircleFill color="red" size={'10px'} />
-                Offline
-              </span>
-            )}
-          </p>
-          <div className="absolute right-5 top-5">
-            {user.hasNewMessages ? <RiErrorWarningLine color="red" size={'20px'} /> : null}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div>
-      <div className="h-screen fixed w-64 z-0 top-0 left-0 bg-[#23272e] overflow-x-hidden">
-        {users.map((user) => {
-          return renderUser(user)
-        })}
-      </div>
-      <div className="bg-[#1e2227] ml-64 h-screen text-white flex flex-col">
-        <div className="py-6 border-b border-slate-600 h-auto">
+      <Sidebar users={users} setUsers={setUsers} selectedUser={selectedUser} setSelectedUser={(e) => setSelectedUser(e)}/>
+      <div className="bg-[#0e1621] ml-[25%] h-screen text-white flex flex-col">
+        <div className="py-4 border-b border-l border-black h-auto bg-[#17212b]">
           <div className="flex items-center ml-12">
             {selectedUser.connected ? (
               <RiCheckboxBlankCircleFill color="green" size={'15px'} />
@@ -168,20 +120,20 @@ export default function Chat() {
             <h2 className="text-xl pl-4">{selectedUser.username}</h2>
           </div>
         </div>
-        <div className="flex flex-col pt-10 px-10 grow">
-          {selectedUser.messages.map((message) => renderMessage(message))}
+        <div className="flex flex-col pt-10 px-10 grow gap-5 overflow-y-auto">
+          {selectedUser.messages.map((message, index) => renderMessage(message, index))}
         </div>
         <div>
           <form onSubmit={(e) => handleSentMessage(e)}>
-            <div className="px-10 py-5 flex gap-2">
+            <div className="px-5 py-5 flex gap-2">
               <input
-                placeholder="Your message here"
-                className="rounded w-11/12 p-2 placeholder:text-sm placeholder:text-center text-black"
+                placeholder="Write a message..."
+                className="rounded w-11/12 p-2 placeholder:text-smplaceholder:text-[#6d7883] bg-[#242f3d] focus:outline-0 text-white"
                 required
                 onChange={(e) => setActualMessage(e.target.value)}
                 value={actualMessage}
               ></input>
-              <button type="submit" className="text-white bg-blue-700 rounded-sm py-2 px-4">
+              <button type="submit" className="text-white bg-[#2b5278] rounded-sm py-2 px-4 hover:bg-[#224260] active:bg-[#1b354d] focus:ring focus:ring-[#366696]">
                 Send
               </button>
             </div>

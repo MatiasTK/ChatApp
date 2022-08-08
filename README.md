@@ -10,3 +10,7 @@ To-Do
 - [ ] Persistent user ID
 - [ ] Persistent messages
 - [ ] Better Doc
+- [ ] Deploy to heroku
+- [X] Better UI
+- [ ] Disconnection handling
+- [ ] Make it mobile friendly
