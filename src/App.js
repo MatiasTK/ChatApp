@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from 'react'
+import Chat from './Components/Chat'
+import Login from './Components/Login'
+import socket from './utils/socket'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function App () {
+  const [logged, setLogged] = useState(false)
+
+  useEffect(() => {
+    socket.on('connect_error', (err) => {
+      console.log(err)
+    })
+
+    return () => {
+      socket.off('connect_error')
+    }
+  }, [])
+
+  return <div>{logged ? <Chat/> : <Login setLogged={setLogged}/>}</div>
 }
 
-export default App;
+export default App
