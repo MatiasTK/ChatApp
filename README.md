@@ -1,7 +1,12 @@
 Chat APP
 ==========
 
-Simple chat app with Sockets
+*Simple chat app with Sockets*
+
+Web
+-----
+
+[Live Demo](https://matiastk-chatapp.herokuapp.com/)
 
 To-Do
 ----------
@@ -10,7 +15,7 @@ To-Do
 - [ ] Persistent user ID
 - [ ] Persistent messages
 - [ ] Better Doc
-- [ ] Deploy to heroku
+- [X] Deploy to heroku
 - [X] Better UI
 - [ ] Disconnection handling
 - [ ] Make it mobile friendly
