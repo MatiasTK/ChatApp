@@ -6,7 +6,7 @@ Chat APP
 Web
 -----
 
-[Live Demo](https://matiastk-chatapp.herokuapp.com/)
+[Live Demo]([https://matiastk-chatapp.herokuapp.com/](https://chatapp-production-2468.up.railway.app/))
 
 To-Do
 ----------
